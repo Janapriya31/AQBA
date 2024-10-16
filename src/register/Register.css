@@ -1,0 +1,121 @@
+/* Ensure the body and html take full height */
+.register{
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+}
+
+/* Add a background overlay to blur the background */
+.register::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://img.freepik.com/free-vector/network-connection-background_23-2148879892.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.5); /* Increased opacity for better overlay effect */
+    z-index: 0;
+    filter: blur(10px);
+}
+
+/* Updated register-container for better width and centering */
+.register-container {
+    width: 90%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly more opaque background */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Add a header styling for the registration form */
+.register-container h1 {
+    margin-bottom: 20px;
+    color: #000000; /* Changed to black */
+    font-weight: bold;
+}
+
+.register-container small {
+    margin-bottom: 20px;
+    color: #000000; /* Changed to black */
+    font-weight: bold;
+}
+/* Form groups should not stretch vertically */
+.form-group {
+    margin-bottom: 20px;
+    width: 100%; /* Full width for inputs */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600; /* Bold labels */
+    color: #000000; /* Changed to black */
+}
+
+/* Updated input and select styling */
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px; /* Slightly increased padding */
+    border: 1px solid #000000;
+    border-radius: 6px; /* Softened border radius */
+    transition: border 0.3s ease; /* Transition for border color on focus */
+}
+
+/* Input focus effect */
+.form-group input:focus, .form-group select:focus {
+    border-color: #00509e; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Button styling */
+.button-group {
+    display: flex;
+    justify-content: space-between; 
+    margin-top: 20px;
+    gap: 15px; 
+}
+
+button {
+    width: 48%; 
+    padding: 12px; /* Increased padding for buttons */
+    background: linear-gradient(45deg, #003366, #00509e);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Button hover effect */
+button:hover {
+    background: linear-gradient(45deg, #002244, #003d80);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly increased shadow on hover */
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Add a footer for additional information or links */
+.footer {
+    margin-top: 20px;
+    color: #666; /* Grey color for footer text */
+    font-size: 14px;    
+}

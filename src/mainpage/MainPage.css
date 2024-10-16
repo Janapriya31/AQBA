@@ -1,0 +1,141 @@
+/* Full-page body with a background image */
+body {
+    margin: 0; /* Set margin to 0 to remove the 8px margin */
+    padding: 0; /* Optional: Set padding to 0 if needed * /* Optional: Set height if needed */
+}
+
+.MainPage {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh; /* Ensure body takes full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.MainPage::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(https://img.freepik.com/free-vector/network-connection-background_23-2148879892.jpg); /* Set the image directly */
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px);
+    z-index: -1;
+}
+
+/* Centered container */
+.signup-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    padding: 60px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1; /* Ensure the form is above the blur effect */
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+}
+
+/* Other styles for buttons and text can remain the same */
+
+
+/* Style for the header */
+h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Button container for vertical alignment */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Button styling with dark blue gradient */
+.btn {
+    padding: 20px 30px;
+    font-size: 1.5rem;
+    width: 100%;
+    color: #ffffff;
+    background: linear-gradient(45deg, #003366, #00509e); /* Dark blue gradient */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Button hover effect */
+.btn:hover {
+    background: linear-gradient(45deg, #002244, #003d80); /* Darker blue on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Media Queries */
+
+/* For small screens (e.g., mobile phones) */
+
+/* Responsive Design - Mobile Screens */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    input, select {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    button {
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+/* Responsive Design - Small Mobile Screens */
+@media (max-width: 480px) {
+    .register-container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    input, select {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}

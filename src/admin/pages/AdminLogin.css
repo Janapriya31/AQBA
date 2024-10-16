@@ -1,0 +1,101 @@
+/* Ensure the body and html take full height */
+.login-body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+/* Add a background overlay to blur the background */
+.login-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Blurs the background */
+    background-color: rgba(0, 0, 0, 0.3); /* Optional: darken the blurred background */
+    z-index: 0;
+    background-image: url('https://img.freepik.com/free-vector/network-connection-background_23-2148879892.jpg'); /* Same background image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(10px);
+}
+
+.login-container {
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Reduced max width for a more compact look */
+    padding: 40px; /* Increased padding for better spacing */
+    border-radius: 16px; /* Rounded corners */
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    text-align: center; /* Center text */
+    position: relative;
+    z-index: 1; /* Ensure the form is on top of the blur effect */
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 20px; /* Space between form elements */
+    width: 100%; /* Full width for inputs */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold; /* Bold labels */
+}
+
+/* Input and select styling */
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px; /* Increase font size for better readability */
+}
+
+/* Button container styles */
+.button-group {
+    display: flex; /* Use flexbox */
+    justify-content: space-between; /* Space between buttons */
+    margin-top: 20px; /* Add space above buttons */
+}
+
+/* Button styles */
+button {
+    padding: 10px 15px; /* Adjust padding for buttons */
+    cursor: pointer; /* Show pointer on hover */
+    border-radius: 10px; /* Rounded corners for buttons */
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Optional: Style for the back button */
+button[type="button"] {
+    background-color: #f0f0f0; /* Light background */
+    border: 1px solid #ccc; /* Border for the button */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+button[type="button"]:hover {
+    background-color: #e0e0e0; /* Darken on hover */
+}
+
+/* Style for the submit button */
+button[type="submit"] {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
