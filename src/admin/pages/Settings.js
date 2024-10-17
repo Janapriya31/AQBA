@@ -1,89 +1,86 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // Assuming you have a separate CSS file
 
 function Settings() {
-  const [setting1, setSetting1] = useState(false); // Feature 1
-  const [setting2, setSetting2] = useState(true);  // Feature 2
-  const [language, setLanguage] = useState('English'); // Language preference
+  const [setting1, setSetting1] = useState(false);  // Feature 1
+  const [setting2, setSetting2] = useState(true);   // Feature 2
+  const [darkMode, setDarkMode] = useState(false);  // Dark mode preference
   const [notificationMethod, setNotificationMethod] = useState('email'); // Notification method
 
   const handleSaveChanges = () => {
-    // Implement save changes logic here
-    console.log('Settings saved:', { setting1, setting2, language, notificationMethod });
+    console.log('Settings saved:', { setting1, setting2, darkMode, notificationMethod });
   };
 
   const handleResetToDefault = () => {
-    // Reset to default settings
     setSetting1(false);
     setSetting2(true);
-    setLanguage('English');
+    setDarkMode(false);
     setNotificationMethod('email');
     console.log('Settings reset to default');
   };
 
   return (
-    <div>
-      <h2 className="centered-heading">Settings</h2>
-      <p>Configure system settings and preferences here.</p>
+    <div className="settings-container">
+      <h2 className="centered-heading">System Settings</h2>
+      <p>Configure the system preferences below:</p>
 
-      {/* Configuration Options */}
-      <div className="form-group">
-        <label>
+      {/* Feature Toggles */}
+      <div className="settings-section">
+        <h3>Features</h3>
+        <div className="form-group">
           <input
             type="checkbox"
             checked={setting1}
             onChange={() => setSetting1(!setting1)}
           />
-          Enable Feature 1
-        </label>
-      </div>
+          <span className="white-label">Enable Feature 1</span>
+        </div>
 
-      <div className="form-group">
-        <label>
+        <div className="form-group">
           <input
             type="checkbox"
             checked={setting2}
             onChange={() => setSetting2(!setting2)}
           />
-          Enable Feature 2
-        </label>
+          <span className="white-label">Enable Feature 2</span>
+        </div>
       </div>
 
-      {/* Language Selection */}
-      <div className="form-group">
-        <label htmlFor="language">Select Language:</label>
-        <select
-          id="language"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-        </select>
+      {/* Appearance Settings */}
+      <div className="settings-section">
+        <h3>Appearance</h3>
+        <div className="form-group">
+          <input
+            type="checkbox"
+            checked={darkMode}
+            onChange={() => setDarkMode(!darkMode)}
+          />
+          <span className="white-label">Enable Dark Mode</span>
+        </div>
       </div>
 
-      {/* Notification Method Selection */}
-      <div className="form-group">
-        <label htmlFor="notification-method">Notification Method:</label>
-        <select
-          id="notification-method"
-          value={notificationMethod}
-          onChange={(e) => setNotificationMethod(e.target.value)}
-        >
-          <option value="email">Email</option>
-          <option value="sms">SMS</option>
-          <option value="push">Push Notification</option>
-        </select>
+      {/* Notification Settings */}
+      <div className="settings-section">
+        <h3>Notifications</h3>
+        <div className="form-group">
+          <span className="white-label">Preferred Notification Method:</span>
+          <select
+            value={notificationMethod}
+            onChange={(e) => setNotificationMethod(e.target.value)}
+          >
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+            <option value="push">Push Notification</option>
+          </select>
+        </div>
       </div>
 
-      {/* Save Changes Button */}
-      <button onClick={handleSaveChanges}>Save Changes</button>
-
-      {/* Reset to Default Button */}
-      <button onClick={handleResetToDefault} style={{ marginLeft: '10px' }}>
-        Reset to Default
-      </button>
+      {/* Action Buttons */}
+      <div className="settings-actions">
+        <button onClick={handleSaveChanges}>Save Changes</button>
+        <button onClick={handleResetToDefault} style={{ marginLeft: '10px' }}>
+          Reset to Default
+        </button>
+      </div>
     </div>
   );
 }

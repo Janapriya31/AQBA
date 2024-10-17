@@ -173,6 +173,9 @@
   background-color: #2980b9;
 }
 
+.white-label {
+  color: white;
+}
 /* Table Styles */
 table {
   width: 100%;

@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react';// Assuming you have a separate CSS file
 
 function ReportGeneration() {
-  const [reportType, setReportType] = useState('summary');
+  const [reportType, setReportType] = useState('usage-statistics');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
   const handleGenerateReport = () => {
-    // Implement report generation logic here
     console.log(`Generating ${reportType} report from ${startDate} to ${endDate}`);
   };
 
   const handleExport = (format) => {
-    // Implement export logic for Excel or PDF
     console.log(`Exporting report in ${format} format`);
   };
 
@@ -22,9 +20,8 @@ function ReportGeneration() {
 
       {/* Report Type Selection */}
       <div className="form-group">
-        <label htmlFor="report-type">Select Report Type:</label>
+        <span className="white-label">Select Report Type:</span>
         <select
-          id="report-type"
           value={reportType}
           onChange={(e) => setReportType(e.target.value)}
         >
@@ -36,20 +33,18 @@ function ReportGeneration() {
 
       {/* Date Range Selection */}
       <div className="form-group">
-        <label htmlFor="start-date">Start Date:</label>
+        <span className="white-label">Start Date:</span>
         <input
           type="date"
-          id="start-date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
         />
       </div>
 
       <div className="form-group">
-        <label htmlFor="end-date">End Date:</label>
+        <span className="white-label">End Date:</span>
         <input
           type="date"
-          id="end-date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
         />
