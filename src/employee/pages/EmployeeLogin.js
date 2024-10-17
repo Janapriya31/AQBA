@@ -1,45 +1,35 @@
 // src/employee/pages/EmployeeLogin.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Ensure you have a CSS file for styling
+import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider, signInWithPopup } from '../../config/firebase';
+
+ // Import Firebase setup
+import './EmployeeLogin.css';
 
 const EmployeeLogin = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
+        // Logic to validate login
         if (username && password) {
-            setLoading(true); // Start loading
-            try {
-                const response = await fetch('http://localhost:5000/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    alert(errorData.error); // Show specific error messages
-                    setLoading(false); // Stop loading
-                    return;
-                }
-
-                const result = await response.json();
-                console.log('Login successful:', result);
-
-                // Optionally, store user info in local storage
-                localStorage.setItem('user', JSON.stringify(result.user));
-
-                navigate('/employee/dashboard'); // Redirect to the employee dashboard
-            } catch (error) {
-                console.error('Error during login:', error);
-                alert('Error during login. Please try again.');
-                setLoading(false); // Stop loading on error
-            }
+            navigate('/employee/dashboard');
         } else {
             alert('Please enter valid credentials');
+        }
+    };
+
+    // Function to handle Google sign-in
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('User Info:', result.user);
+            navigate('/employee/dashboard');
+        } catch (error) {
+            console.error('Error signing in with Google:', error);
+            alert('Failed to sign in with Google. Please try again.');
         }
     };
 
@@ -72,9 +62,13 @@ const EmployeeLogin = () => {
                     </div>
                     <div className="button-group">
                         <button type="button" onClick={() => navigate(-1)}>Back</button>
-                        <button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
+                        <button type="submit">Login</button>
                     </div>
                 </form>
+                <div className="or-separator">OR</div>
+                <button className="google-signin-button" onClick={handleGoogleSignIn}>
+                    Sign in with Google
+                </button>
             </div>
         </div>
     );

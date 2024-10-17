@@ -1,43 +1,33 @@
-// TrainerLogin.js
+// src/admin/pages/TrainerLogin.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Ensure this file exists
+import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider, signInWithPopup } from '../../config/firebase';
+ // Import Firebase utilities
+import './TrainerLogin.css'; // Make sure you have or create a CSS file for styling
 
 const TrainerLogin = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
+        // Logic to validate login
         if (username && password) {
-            setLoading(true);
-            try {
-                const response = await fetch('http://localhost:5000/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    alert(errorData.error);
-                    setLoading(false);
-                    return;
-                }
-
-                const result = await response.json();
-                console.log('Login successful:', result);
-                
-                localStorage.setItem('user', JSON.stringify(result.user));
-                navigate('/trainer/dashboard'); // Redirect to the trainer dashboard
-            } catch (error) {
-                console.error('Error during login:', error);
-                alert('Error during login. Please try again.');
-                setLoading(false);
-            }
+            navigate('/trainer/dashboard');
         } else {
             alert('Please enter valid credentials');
+        }
+    };
+
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('User Info:', result.user);
+            navigate('/trainer/dashboard');
+        } catch (error) {
+            console.error('Error signing in with Google:', error);
+            alert('Failed to sign in with Google. Please try again.');
         }
     };
 
@@ -70,9 +60,13 @@ const TrainerLogin = () => {
                     </div>
                     <div className="button-group">
                         <button type="button" onClick={() => navigate(-1)}>Back</button>
-                        <button type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
+                        <button type="submit">Login</button>
                     </div>
                 </form>
+                <div className="or-separator">OR</div>
+                <button className="google-signin-button" onClick={handleGoogleSignIn}>
+                    Sign in with Google
+                </button>
             </div>
         </div>
     );
