@@ -14,7 +14,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 350px;
+    width: 400px;
     text-align: center;
 }
 
@@ -30,11 +30,12 @@
 }
 
 .form-group input {
-    width: 100%;
+    width: 100%; /* Ensures inputs fit within the container */
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't extend the input beyond the container */
 }
 
 .button-group {

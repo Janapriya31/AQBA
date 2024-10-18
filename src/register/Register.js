@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
-import { auth, googleProvider, signInWithPopup } from '../config/firebase';
- // Import Firebase utilities
+import { auth, googleProvider, signInWithPopup } from '../config/firebase'; // Adjust your import as necessary
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -60,12 +59,34 @@ const RegisterPage = () => {
     const handleGoogleSignIn = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            console.log('Google Sign-In successful:', result.user);
-            setSuccessMessage('Registration successful with Google!');
-            setErrorMessage('');
+            const user = result.user;
+            console.log('Google Sign-In successful:', user);
 
-            // Navigate to a different page upon successful registration
-            navigate('/dashboard');
+            // Send user data to MongoDB
+            const response = await fetch('http://localhost:5000/register', { // Adjust URL as necessary
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: user.displayName || user.email, // Use displayName or email as username
+                    email: user.email,
+                    password: 'defaultPassword', // Handle password management appropriately
+                    name: user.displayName,
+                    mobileNumber: '', // Collect this information separately if needed
+                    role: 'User', // Set a default role or manage it as needed
+                    secretCode: null, // Manage secret code based on your app logic
+                }),
+            });
+
+            if (response.ok) {
+                console.log('User data stored in MongoDB successfully.');
+                setSuccessMessage('Registration successful with Google!');
+                setErrorMessage('');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to store user data in MongoDB.');
+            }
         } catch (error) {
             console.error('Error signing in with Google:', error);
             setErrorMessage('Failed to sign in with Google. Please try again.');
@@ -185,4 +206,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

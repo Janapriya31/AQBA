@@ -1,8 +1,6 @@
-// src/admin/pages/TrainerLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider, signInWithPopup } from '../../config/firebase';
- // Import Firebase utilities
 import './TrainerLogin.css'; // Make sure you have or create a CSS file for styling
 
 const TrainerLogin = () => {
@@ -10,11 +8,33 @@ const TrainerLogin = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Logic to validate login
+
         if (username && password) {
-            navigate('/trainer/dashboard');
+            try {
+                const response = await fetch('http://localhost:5000/login', { // Change the URL as per your server configuration
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Successful login
+                    console.log('Login successful:', data);
+                    navigate('/trainer/dashboard');
+                } else {
+                    // Handle errors
+                    alert(data.error || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                alert('An error occurred. Please try again later.');
+            }
         } else {
             alert('Please enter valid credentials');
         }
@@ -23,10 +43,29 @@ const TrainerLogin = () => {
     const handleGoogleSignIn = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            console.log('User Info:', result.user);
-            navigate('/trainer/dashboard');
+            const user = result.user;
+
+            // Send the Google user data (email, etc.) to your backend to check if the user exists
+            const response = await fetch('http://localhost:5000/google-login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: user.email }), // Send only necessary user data
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.exists) {
+                // If user exists in the database, log in and navigate to dashboard
+                console.log('Google Login successful:', data);
+                navigate('/trainer/dashboard');
+            } else {
+                // User doesn't exist in the database
+                alert('Your Google account is not registered. Please contact the admin.');
+            }
         } catch (error) {
-            console.error('Error signing in with Google:', error);
+            console.error('Error during Google login:', error);
             alert('Failed to sign in with Google. Please try again.');
         }
     };
