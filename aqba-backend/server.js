@@ -13,6 +13,7 @@ const feedbackRoutes = require('./routes/feedbackRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const questionRoutes = require('./routes/questionRoutes');
+const geminiRoutes = require('./routes/geminiRoutes'); // Gemini API routes
 
 // Initialize app
 const app = express();
@@ -21,17 +22,17 @@ dotenv.config();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads')); // Serve uploaded files
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
+    useUnifiedTopology: true,
+})
+.then(() => {
     console.log('MongoDB connected');
-}).catch((err) => console.log('MongoDB connection error:', err));
-
-// Serve uploaded files
-app.use('/uploads', express.static('uploads'));
+})
+.catch((err) => console.log('MongoDB connection error:', err));
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -52,7 +53,7 @@ app.post('/api/curriculum/upload', upload.single('file'), (req, res) => {
     res.send(`File uploaded successfully: ${req.file.filename}`);
 });
 
-// User Schema and Model (Prevention of model overwriting)
+// User Schema and Model (Avoid overwriting model)
 let User;
 try {
     User = mongoose.model('User');
@@ -73,11 +74,12 @@ app.use('/api/curriculum', curriculumRoutes);
 app.use('/api/questionbank', questionBankRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/employees', employeeRoutes);
-app.use('/api', userRoutes);
-app.use('/api', questionRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/questions', questionRoutes);
+app.use('/api/gemini', geminiRoutes); // Gemini API integration
 
-// Fetch all users
-app.get('/users', async (req, res) => {
+// User Routes for basic CRUD operations
+app.get('/api/users', async (req, res) => {
     try {
         const users = await User.find();
         res.status(200).json(users);
@@ -87,8 +89,7 @@ app.get('/users', async (req, res) => {
     }
 });
 
-// Fetch single user by ID
-app.get('/users/:id', async (req, res) => {
+app.get('/api/users/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
@@ -101,8 +102,7 @@ app.get('/users/:id', async (req, res) => {
     }
 });
 
-// Delete a user
-app.delete('/users/:id', async (req, res) => {
+app.delete('/api/users/:id', async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
@@ -115,23 +115,22 @@ app.delete('/users/:id', async (req, res) => {
     }
 });
 
-// Update a user
-app.put('/users/:id', async (req, res) => {
+app.put('/api/users/:id', async (req, res) => {
     try {
         const { name, role } = req.body;
         const updatedUser = await User.findByIdAndUpdate(req.params.id, { name, role }, { new: true });
-
         if (!updatedUser) {
             return res.status(404).send('User not found');
         }
         res.status(200).json(updatedUser);
     } catch (error) {
+        console.error('Error updating user:', error);
         res.status(500).send('Error updating user');
     }
 });
 
 // Registration Route
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { username, email, password, name, mobileNumber, role, secretCode } = req.body;
 
     try {
@@ -161,7 +160,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login Route
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -183,7 +182,7 @@ app.post('/login', async (req, res) => {
 });
 
 // Google Login Route
-app.post('/google-login', async (req, res) => {
+app.post('/api/google-login', async (req, res) => {
     const { email } = req.body;
 
     try {
@@ -201,15 +200,16 @@ app.post('/google-login', async (req, res) => {
 });
 
 // Test Route
-app.get('/test', (req, res) => {
+app.get('/api/test', (req, res) => {
     res.send('Test route is working!');
 });
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
+    console.error('Error:', err); // Log the error for debugging
     res.status(err.status || 500).json({
         error: {
-            message: err.message
+            message: err.message || 'Internal Server Error'
         }
     });
 });
