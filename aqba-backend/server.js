@@ -5,6 +5,8 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
+const http = require('http');
+const socketIo = require('socket.io');
 
 // Import Routes
 const curriculumRoutes = require('./routes/curriculumRoutes');
@@ -14,6 +16,11 @@ const employeeRoutes = require('./routes/employeeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const questionRoutes = require('./routes/questionRoutes');
 const geminiRoutes = require('./routes/geminiRoutes'); // Gemini API routes
+const authRoutes = require('./routes/auth');
+const assessmentRoutes = require('./routes/assessments'); // Assessment routes
+const notificationRoutes = require('./routes/notificationRoutes');
+const aiRoutes = require('./routes/airoutes'); // AI Task routes
+
 
 // Initialize app
 const app = express();
@@ -77,6 +84,9 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/gemini', geminiRoutes); // Gemini API integration
+app.use('/api/auth', authRoutes);
+app.use('/api/assessments', assessmentRoutes); // Assessment routes
+app.use('/api/notifications', notificationRoutes);
 
 // User Routes for basic CRUD operations
 app.get('/api/users', async (req, res) => {
@@ -89,45 +99,8 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-app.get('/api/users/:id', async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.status(200).json(user);
-    } catch (error) {
-        console.error('Error fetching user:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
-
-app.delete('/api/users/:id', async (req, res) => {
-    try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-        if (!deletedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.status(200).send('User deleted successfully');
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        res.status(500).send('Error deleting user');
-    }
-});
-
-app.put('/api/users/:id', async (req, res) => {
-    try {
-        const { name, role } = req.body;
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, { name, role }, { new: true });
-        if (!updatedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.status(200).json(updatedUser);
-    } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).send('Error updating user');
-    }
-});
+// Other CRUD operations for users...
+// (Keep your existing user CRUD routes here)
 
 // Registration Route
 app.post('/api/register', async (req, res) => {
@@ -181,24 +154,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Google Login Route
-app.post('/api/google-login', async (req, res) => {
-    const { email } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-
-        if (user) {
-            res.status(200).json({ exists: true });
-        } else {
-            res.status(404).json({ exists: false });
-        }
-    } catch (error) {
-        console.error('Error in Google login route:', error);
-        res.status(500).json({ error: 'An error occurred while checking the user.' });
-    }
-});
-
 // Test Route
 app.get('/api/test', (req, res) => {
     res.send('Test route is working!');
@@ -214,8 +169,21 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start the server
+// WebSocket configuration for real-time notifications
+const server = http.createServer(app);
+const io = socketIo(server);
+
+io.on('connection', (socket) => {
+    console.log('New WebSocket connection established');
+
+    // Send real-time notifications
+    socket.on('sendNotification', (notification) => {
+        io.emit('receiveNotification', notification);
+    });
+});
+
+// Start the server with WebSocket and HTTP support
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
